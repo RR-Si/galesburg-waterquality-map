@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_c2e8273e2090ebd903589895e5296f95 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+</head>
+<body>
+    
+    
+<div style="position: fixed;
+            top: 10px; left: 50px; width: 600px; height: 60px;
+            background-color: white; border:2px solid grey; z-index:9999;
+            font-size:16px; font-weight: bold; padding: 10px">
+    <center>Galesburg Water Quality: Fluoride Concentration Heatmap</center>
+</div>
+    
+<div style="position: fixed;
+            bottom: 50px; right: 50px; width: 220px; height: 200px;
+            background-color: white; border:2px solid grey; z-index:9999;
+            font-size:12px; padding: 10px">
+    <p style="margin: 0; font-weight: bold; text-align: center; padding-bottom: 5px;">
+        Fluoride Concentration (mg/L)
+    </p>
+    <p style="margin: 5px 0;">
+        <span style="background-color: #005a32; padding: 3px 10px; color: white;">&nbsp;&nbsp;</span>
+        Very High (&gt;0.83)
+    </p>
+    <p style="margin: 5px 0;">
+        <span style="background-color: #238b45; padding: 3px 10px; color: white;">&nbsp;&nbsp;</span>
+        High (0.81-0.83)
+    </p>
+    <p style="margin: 5px 0;">
+        <span style="background-color: #41ab5d; padding: 3px 10px; color: white;">&nbsp;&nbsp;</span>
+        Medium (0.78-0.81)
+    </p>
+    <p style="margin: 5px 0;">
+        <span style="background-color: #74c476; padding: 3px 10px;">&nbsp;&nbsp;</span>
+        Low-Med (0.76-0.78)
+    </p>
+    <p style="margin: 5px 0;">
+        <span style="background-color: #a1d99b; padding: 3px 10px;">&nbsp;&nbsp;</span>
+        Low (0.74-0.76)
+    </p>
+    <p style="margin: 5px 0;">
+        <span style="background-color: #c7e9c0; padding: 3px 10px;">&nbsp;&nbsp;</span>
+        Very Low (&lt;0.74)
+    </p>
+</div>
+    
+            <div class="folium-map" id="map_c2e8273e2090ebd903589895e5296f95" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_c2e8273e2090ebd903589895e5296f95 = L.map(
+                "map_c2e8273e2090ebd903589895e5296f95",
+                {
+                    center: [40.94874074074074, -90.36835185185186],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3ba37af7863ea8f580b7a64dc9744dc2 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3ba37af7863ea8f580b7a64dc9744dc2.addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+            var heat_map_e07bc13698bba05ac60f86b9ae748dfc = L.heatLayer(
+                [[40.967222222222226, -90.36722222222221, 0.8192880627], [40.93805555555555, -90.35694444444444, 0.8162683227], [40.942499999999995, -90.37194444444444, 0.7802991357], [40.94305555555555, -90.37472222222222, 0.7995213064], [40.943888888888885, -90.37472222222222, 0.8044206844], [40.98444444444444, -90.38416666666667, 0.7669573964], [40.94083333333333, -90.36944444444444, 0.784749193], [40.94138888888889, -90.35527777777777, 0.7650737876], [40.95916666666667, -90.37916666666666, 0.7657220627], [40.96222222222222, -90.35666666666665, 0.6929937851], [40.94, -90.36166666666666, 0.7730295952], [40.94277777777778, -90.37305555555555, 0.8289044587], [40.941111111111105, -90.37388888888889, 0.8353531469], [40.94166666666666, -90.3736111111111, 0.8188211073], [40.93888888888888, -90.3786111111111, 0.8490025469], [40.95444444444445, -90.3625, 0.7597411951], [40.94305555555555, -90.36749999999999, 0.8447338247], [40.94305555555555, -90.3711111111111, 0.7446525647], [40.94333333333333, -90.36999999999999, 0.7776865343], [40.94166666666666, -90.37027777777777, 0.7296687387], [40.94361111111111, -90.36916666666666, 0.7562845619], [40.94333333333333, -90.37166666666666, 0.7497915981], [40.95861111111111, -90.36805555555554, 0.8434886762], [40.95472222222222, -90.34638888888888, 0.7392882628], [40.94416666666666, -90.34166666666667, 0.7411841928], [40.940555555555555, -90.37388888888889, 0.7156662174], [40.970555555555556, -90.37305555555555, 0.7632224332], [40.9575, -90.35666666666665, 0.7660066393], [40.95027777777778, -90.37277777777777, 0.7566631567], [40.94611111111111, -90.38472222222222, 0.827]],
+                {
+  "minOpacity": 0.3,
+  "maxZoom": 18,
+  "radius": 30,
+  "blur": 40,
+  "gradient": {
+  0.0: "#c7e9c0",
+  0.3: "#a1d99b",
+  0.5: "#74c476",
+  0.7: "#41ab5d",
+  0.85: "#238b45",
+  1.0: "#005a32",
+},
+  "maxOpacity": 0.85,
+}
+            );
+        
+    
+            heat_map_e07bc13698bba05ac60f86b9ae748dfc.addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+            var circle_marker_cdb1b7a9dbb59385f3117671b3ec9c62 = L.circleMarker(
+                [40.967222222222226, -90.36722222222221],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#238b45", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_8dee66f16715f1a9d2af85f9db8cdb7d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cc9c144164023ddfc929dd6884a9853f = $(`<div id="html_cc9c144164023ddfc929dd6884a9853f" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8193 mg/L<br>Distance: 2769.5 m</div>`)[0];
+                popup_8dee66f16715f1a9d2af85f9db8cdb7d.setContent(html_cc9c144164023ddfc929dd6884a9853f);
+            
+        
+
+        circle_marker_cdb1b7a9dbb59385f3117671b3ec9c62.bindPopup(popup_8dee66f16715f1a9d2af85f9db8cdb7d)
+        ;
+
+        
+    
+    
+            var circle_marker_a2cab397bac0d2bcc37442558cbd82a1 = L.circleMarker(
+                [40.93805555555555, -90.35694444444444],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#238b45", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_ecf37ecc3183ee74bb9830247945435a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f7c57672e7c7a9f84b6cee61710fa0f8 = $(`<div id="html_f7c57672e7c7a9f84b6cee61710fa0f8" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8163 mg/L<br>Distance: 2499.0 m</div>`)[0];
+                popup_ecf37ecc3183ee74bb9830247945435a.setContent(html_f7c57672e7c7a9f84b6cee61710fa0f8);
+            
+        
+
+        circle_marker_a2cab397bac0d2bcc37442558cbd82a1.bindPopup(popup_ecf37ecc3183ee74bb9830247945435a)
+        ;
+
+        
+    
+    
+            var circle_marker_2a8960b818b02d39d747b0ccda7dd8dd = L.circleMarker(
+                [40.942499999999995, -90.37194444444444],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#41ab5d", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_f54111dc0a516b7495acd363e6225eec = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_efe5367a3fce5ae574d79e3e3fec8bc8 = $(`<div id="html_efe5367a3fce5ae574d79e3e3fec8bc8" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7803 mg/L<br>Distance: 1145.9 m</div>`)[0];
+                popup_f54111dc0a516b7495acd363e6225eec.setContent(html_efe5367a3fce5ae574d79e3e3fec8bc8);
+            
+        
+
+        circle_marker_2a8960b818b02d39d747b0ccda7dd8dd.bindPopup(popup_f54111dc0a516b7495acd363e6225eec)
+        ;
+
+        
+    
+    
+            var circle_marker_fb5f646d12e0b1e4fc23e4fb0ad4ac76 = L.circleMarker(
+                [40.94305555555555, -90.37472222222222],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#41ab5d", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_b12d0e198b1869f34689d7e05dd801b6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e5a712774f421ff086d5bfc6836cfd6d = $(`<div id="html_e5a712774f421ff086d5bfc6836cfd6d" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7995 mg/L<br>Distance: 906.0 m</div>`)[0];
+                popup_b12d0e198b1869f34689d7e05dd801b6.setContent(html_e5a712774f421ff086d5bfc6836cfd6d);
+            
+        
+
+        circle_marker_fb5f646d12e0b1e4fc23e4fb0ad4ac76.bindPopup(popup_b12d0e198b1869f34689d7e05dd801b6)
+        ;
+
+        
+    
+    
+            var circle_marker_bdf17cffe92a0c4ba728fe127d71e0d4 = L.circleMarker(
+                [40.943888888888885, -90.37472222222222],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#41ab5d", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_56c9329d3a7350aa5a451eada8d854e8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8d9d2af1f3bc5dd983ef64e98239cf72 = $(`<div id="html_8d9d2af1f3bc5dd983ef64e98239cf72" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8044 mg/L<br>Distance: 875.5 m</div>`)[0];
+                popup_56c9329d3a7350aa5a451eada8d854e8.setContent(html_8d9d2af1f3bc5dd983ef64e98239cf72);
+            
+        
+
+        circle_marker_bdf17cffe92a0c4ba728fe127d71e0d4.bindPopup(popup_56c9329d3a7350aa5a451eada8d854e8)
+        ;
+
+        
+    
+    
+            var circle_marker_440301c57bddda2fa0572d82ece1ace3 = L.circleMarker(
+                [40.98444444444444, -90.38416666666667],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_7257cecb195aceabeb2a42ceca404691 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_13cf6fa1b56ded4861e0daf0dbce4e5c = $(`<div id="html_13cf6fa1b56ded4861e0daf0dbce4e5c" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7670 mg/L<br>Distance: 4263.0 m</div>`)[0];
+                popup_7257cecb195aceabeb2a42ceca404691.setContent(html_13cf6fa1b56ded4861e0daf0dbce4e5c);
+            
+        
+
+        circle_marker_440301c57bddda2fa0572d82ece1ace3.bindPopup(popup_7257cecb195aceabeb2a42ceca404691)
+        ;
+
+        
+    
+    
+            var circle_marker_6a22140d417e2eb30e4e03ac542b5155 = L.circleMarker(
+                [40.94083333333333, -90.36944444444444],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#41ab5d", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_1cb5fb065e6d36191eb786ed288344f5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e3c1c8a518af18d5235de41e2e40f7b8 = $(`<div id="html_e3c1c8a518af18d5235de41e2e40f7b8" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7847 mg/L<br>Distance: 1411.0 m</div>`)[0];
+                popup_1cb5fb065e6d36191eb786ed288344f5.setContent(html_e3c1c8a518af18d5235de41e2e40f7b8);
+            
+        
+
+        circle_marker_6a22140d417e2eb30e4e03ac542b5155.bindPopup(popup_1cb5fb065e6d36191eb786ed288344f5)
+        ;
+
+        
+    
+    
+            var circle_marker_908f3eabe2de47bdc00c2d9d61bb3f31 = L.circleMarker(
+                [40.94138888888889, -90.35527777777777],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_cfb790bc4b3b2992df0748d676779d42 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d62b8340d76067f2a786bcd1ba9b079d = $(`<div id="html_d62b8340d76067f2a786bcd1ba9b079d" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7651 mg/L<br>Distance: 2528.0 m</div>`)[0];
+                popup_cfb790bc4b3b2992df0748d676779d42.setContent(html_d62b8340d76067f2a786bcd1ba9b079d);
+            
+        
+
+        circle_marker_908f3eabe2de47bdc00c2d9d61bb3f31.bindPopup(popup_cfb790bc4b3b2992df0748d676779d42)
+        ;
+
+        
+    
+    
+            var circle_marker_307c442e90f9b57e71e6be885b9dffef = L.circleMarker(
+                [40.95916666666667, -90.37916666666666],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_6f3689ad4fb09f232a1392cae9987062 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_acd580e5017b928a8a194d289519fe63 = $(`<div id="html_acd580e5017b928a8a194d289519fe63" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7657 mg/L<br>Distance: 1524.8 m</div>`)[0];
+                popup_6f3689ad4fb09f232a1392cae9987062.setContent(html_acd580e5017b928a8a194d289519fe63);
+            
+        
+
+        circle_marker_307c442e90f9b57e71e6be885b9dffef.bindPopup(popup_6f3689ad4fb09f232a1392cae9987062)
+        ;
+
+        
+    
+    
+            var circle_marker_8ac316bed2cb471dd993fae9ae4c68c1 = L.circleMarker(
+                [40.96222222222222, -90.35666666666665],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c7e9c0", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_5531a29fc108c2d4a49ff81cf668403e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4c3301bdbd1feb03ad3e528b2fc32c8f = $(`<div id="html_4c3301bdbd1feb03ad3e528b2fc32c8f" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.6930 mg/L<br>Distance: 2960.0 m</div>`)[0];
+                popup_5531a29fc108c2d4a49ff81cf668403e.setContent(html_4c3301bdbd1feb03ad3e528b2fc32c8f);
+            
+        
+
+        circle_marker_8ac316bed2cb471dd993fae9ae4c68c1.bindPopup(popup_5531a29fc108c2d4a49ff81cf668403e)
+        ;
+
+        
+    
+    
+            var circle_marker_3f49dcb28e50830353cbf25cf1f3a158 = L.circleMarker(
+                [40.94, -90.36166666666666],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_6ab9b047fbc39eb5e97bb572c24e7080 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c0502362bea0c5ea6cfc7ee8879640f8 = $(`<div id="html_c0502362bea0c5ea6cfc7ee8879640f8" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7730 mg/L<br>Distance: 2052.3 m</div>`)[0];
+                popup_6ab9b047fbc39eb5e97bb572c24e7080.setContent(html_c0502362bea0c5ea6cfc7ee8879640f8);
+            
+        
+
+        circle_marker_3f49dcb28e50830353cbf25cf1f3a158.bindPopup(popup_6ab9b047fbc39eb5e97bb572c24e7080)
+        ;
+
+        
+    
+    
+            var circle_marker_30f030597bbecbc5175185979b50eb01 = L.circleMarker(
+                [40.94277777777778, -90.37305555555555],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#238b45", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_718588d8ff333c3ecf0129e71aa397ef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_47612712e15fae07d94f1e2152f80a61 = $(`<div id="html_47612712e15fae07d94f1e2152f80a61" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8289 mg/L<br>Distance: 1047.6 m</div>`)[0];
+                popup_718588d8ff333c3ecf0129e71aa397ef.setContent(html_47612712e15fae07d94f1e2152f80a61);
+            
+        
+
+        circle_marker_30f030597bbecbc5175185979b50eb01.bindPopup(popup_718588d8ff333c3ecf0129e71aa397ef)
+        ;
+
+        
+    
+    
+            var circle_marker_6e0cb3416a6551b51c003583c8221a3b = L.circleMarker(
+                [40.941111111111105, -90.37388888888889],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#005a32", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_829032d5552d51195498a1c95ae2d7d4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_491aaae398bcff7b7c185e1a830c46e8 = $(`<div id="html_491aaae398bcff7b7c185e1a830c46e8" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8354 mg/L<br>Distance: 1066.3 m</div>`)[0];
+                popup_829032d5552d51195498a1c95ae2d7d4.setContent(html_491aaae398bcff7b7c185e1a830c46e8);
+            
+        
+
+        circle_marker_6e0cb3416a6551b51c003583c8221a3b.bindPopup(popup_829032d5552d51195498a1c95ae2d7d4)
+        ;
+
+        
+    
+    
+            var circle_marker_1b1d4d196390128b10e27c70848f6f76 = L.circleMarker(
+                [40.94166666666666, -90.3736111111111],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#238b45", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_27bbcf906432d0e4c33452c212d8f839 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3e713c19794dd7c7199ee7edc5dce29e = $(`<div id="html_3e713c19794dd7c7199ee7edc5dce29e" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8188 mg/L<br>Distance: 1056.0 m</div>`)[0];
+                popup_27bbcf906432d0e4c33452c212d8f839.setContent(html_3e713c19794dd7c7199ee7edc5dce29e);
+            
+        
+
+        circle_marker_1b1d4d196390128b10e27c70848f6f76.bindPopup(popup_27bbcf906432d0e4c33452c212d8f839)
+        ;
+
+        
+    
+    
+            var circle_marker_05fcd855358601a047eab1ca31ff6d68 = L.circleMarker(
+                [40.93888888888888, -90.3786111111111],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#005a32", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_92e436a80c4413878cf6d609a89fc728 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9bfc071124eea1fd6802efb8e11453a4 = $(`<div id="html_9bfc071124eea1fd6802efb8e11453a4" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8490 mg/L<br>Distance: 953.1 m</div>`)[0];
+                popup_92e436a80c4413878cf6d609a89fc728.setContent(html_9bfc071124eea1fd6802efb8e11453a4);
+            
+        
+
+        circle_marker_05fcd855358601a047eab1ca31ff6d68.bindPopup(popup_92e436a80c4413878cf6d609a89fc728)
+        ;
+
+        
+    
+    
+            var circle_marker_cb73665ea5f420be1a6e810b8bfaf14d = L.circleMarker(
+                [40.95444444444445, -90.3625],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a1d99b", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_798537ac668d3fdc8295c61ec66f7b0a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6e26bea2968dea6babb713e6788efd13 = $(`<div id="html_6e26bea2968dea6babb713e6788efd13" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7597 mg/L<br>Distance: 2083.7 m</div>`)[0];
+                popup_798537ac668d3fdc8295c61ec66f7b0a.setContent(html_6e26bea2968dea6babb713e6788efd13);
+            
+        
+
+        circle_marker_cb73665ea5f420be1a6e810b8bfaf14d.bindPopup(popup_798537ac668d3fdc8295c61ec66f7b0a)
+        ;
+
+        
+    
+    
+            var circle_marker_f70c2ab879991903e4b5493946774313 = L.circleMarker(
+                [40.94305555555555, -90.36749999999999],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#005a32", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_14b581f6d13271534360749494024b1e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_021306c9fe83ef87316e0b2512c5ae91 = $(`<div id="html_021306c9fe83ef87316e0b2512c5ae91" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8447 mg/L<br>Distance: 1486.0 m</div>`)[0];
+                popup_14b581f6d13271534360749494024b1e.setContent(html_021306c9fe83ef87316e0b2512c5ae91);
+            
+        
+
+        circle_marker_f70c2ab879991903e4b5493946774313.bindPopup(popup_14b581f6d13271534360749494024b1e)
+        ;
+
+        
+    
+    
+            var circle_marker_1f3f45176064adc9461af9a0343ead62 = L.circleMarker(
+                [40.94305555555555, -90.3711111111111],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a1d99b", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_ebdd2c56837526e8407893a7648d9d28 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_35eefe9617bd0c958bfc5b3ed839e371 = $(`<div id="html_35eefe9617bd0c958bfc5b3ed839e371" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7447 mg/L<br>Distance: 1192.6 m</div>`)[0];
+                popup_ebdd2c56837526e8407893a7648d9d28.setContent(html_35eefe9617bd0c958bfc5b3ed839e371);
+            
+        
+
+        circle_marker_1f3f45176064adc9461af9a0343ead62.bindPopup(popup_ebdd2c56837526e8407893a7648d9d28)
+        ;
+
+        
+    
+    
+            var circle_marker_648d07502de2afab650b75d62c04cbc0 = L.circleMarker(
+                [40.94333333333333, -90.36999999999999],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_2e872a1d7c292fb6aa8907f72a096d8d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_aa439cee0caf9874ce4c99022483a142 = $(`<div id="html_aa439cee0caf9874ce4c99022483a142" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7777 mg/L<br>Distance: 1274.5 m</div>`)[0];
+                popup_2e872a1d7c292fb6aa8907f72a096d8d.setContent(html_aa439cee0caf9874ce4c99022483a142);
+            
+        
+
+        circle_marker_648d07502de2afab650b75d62c04cbc0.bindPopup(popup_2e872a1d7c292fb6aa8907f72a096d8d)
+        ;
+
+        
+    
+    
+            var circle_marker_f32b17ef30d0ba2abe6a65694f3eb4d2 = L.circleMarker(
+                [40.94166666666666, -90.37027777777777],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c7e9c0", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_641d75d9df8e353c9cb74d16e01e9b71 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_40fab11258b234aa6cb989327c102c48 = $(`<div id="html_40fab11258b234aa6cb989327c102c48" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7297 mg/L<br>Distance: 1310.0 m</div>`)[0];
+                popup_641d75d9df8e353c9cb74d16e01e9b71.setContent(html_40fab11258b234aa6cb989327c102c48);
+            
+        
+
+        circle_marker_f32b17ef30d0ba2abe6a65694f3eb4d2.bindPopup(popup_641d75d9df8e353c9cb74d16e01e9b71)
+        ;
+
+        
+    
+    
+            var circle_marker_40ea4f2b7e1802a07c4d1999a589ea37 = L.circleMarker(
+                [40.94361111111111, -90.36916666666666],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a1d99b", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_4dd7b669dbe6c2e1c39f58ca0399dec9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_72e811776d986dee86dabf0a6bfbc643 = $(`<div id="html_72e811776d986dee86dabf0a6bfbc643" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7563 mg/L<br>Distance: 1335.8 m</div>`)[0];
+                popup_4dd7b669dbe6c2e1c39f58ca0399dec9.setContent(html_72e811776d986dee86dabf0a6bfbc643);
+            
+        
+
+        circle_marker_40ea4f2b7e1802a07c4d1999a589ea37.bindPopup(popup_4dd7b669dbe6c2e1c39f58ca0399dec9)
+        ;
+
+        
+    
+    
+            var circle_marker_f41e0f3566822f8c42efbb2d34fc0375 = L.circleMarker(
+                [40.94333333333333, -90.37166666666666],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a1d99b", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_5a5bd2c09af2dc7f6fec8e53d60e4670 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_778482285c11a7331d135775b60da57f = $(`<div id="html_778482285c11a7331d135775b60da57f" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7498 mg/L<br>Distance: 1139.2 m</div>`)[0];
+                popup_5a5bd2c09af2dc7f6fec8e53d60e4670.setContent(html_778482285c11a7331d135775b60da57f);
+            
+        
+
+        circle_marker_f41e0f3566822f8c42efbb2d34fc0375.bindPopup(popup_5a5bd2c09af2dc7f6fec8e53d60e4670)
+        ;
+
+        
+    
+    
+            var circle_marker_27f0cc11bbfeca526f5c66a3dc06538f = L.circleMarker(
+                [40.95861111111111, -90.36805555555554],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#005a32", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_fbc98f186c7e1aeba16840ec60c75a9c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1f9604c8aa2a0f6c92ff7555bec4f971 = $(`<div id="html_1f9604c8aa2a0f6c92ff7555bec4f971" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8435 mg/L<br>Distance: 1972.6 m</div>`)[0];
+                popup_fbc98f186c7e1aeba16840ec60c75a9c.setContent(html_1f9604c8aa2a0f6c92ff7555bec4f971);
+            
+        
+
+        circle_marker_27f0cc11bbfeca526f5c66a3dc06538f.bindPopup(popup_fbc98f186c7e1aeba16840ec60c75a9c)
+        ;
+
+        
+    
+    
+            var circle_marker_d97141e9adc69189050abfc5ed12cc13 = L.circleMarker(
+                [40.95472222222222, -90.34638888888888],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c7e9c0", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_91fa14f6d5815ca577d40b2c3dd12dd3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bd20427eee6a2ce79c6282cfad765cc7 = $(`<div id="html_bd20427eee6a2ce79c6282cfad765cc7" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7393 mg/L<br>Distance: 3359.0 m</div>`)[0];
+                popup_91fa14f6d5815ca577d40b2c3dd12dd3.setContent(html_bd20427eee6a2ce79c6282cfad765cc7);
+            
+        
+
+        circle_marker_d97141e9adc69189050abfc5ed12cc13.bindPopup(popup_91fa14f6d5815ca577d40b2c3dd12dd3)
+        ;
+
+        
+    
+    
+            var circle_marker_f465343665d5263d58498f9b00a93429 = L.circleMarker(
+                [40.94416666666666, -90.34166666666667],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a1d99b", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_f403b7bb7e14c430605d3fc33a161d13 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5cb23f80100d2f600d0e310cd6150cb3 = $(`<div id="html_5cb23f80100d2f600d0e310cd6150cb3" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7412 mg/L<br>Distance: 3623.0 m</div>`)[0];
+                popup_f403b7bb7e14c430605d3fc33a161d13.setContent(html_5cb23f80100d2f600d0e310cd6150cb3);
+            
+        
+
+        circle_marker_f465343665d5263d58498f9b00a93429.bindPopup(popup_f403b7bb7e14c430605d3fc33a161d13)
+        ;
+
+        
+    
+    
+            var circle_marker_0139f231fec2c18ba4b76c66645b8e73 = L.circleMarker(
+                [40.940555555555555, -90.37388888888889],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c7e9c0", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_10b427316b14c9b47957cb0026ea9c04 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f6c1d16731d480585cbeaf22728ad6df = $(`<div id="html_f6c1d16731d480585cbeaf22728ad6df" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7157 mg/L<br>Distance: 1099.8 m</div>`)[0];
+                popup_10b427316b14c9b47957cb0026ea9c04.setContent(html_f6c1d16731d480585cbeaf22728ad6df);
+            
+        
+
+        circle_marker_0139f231fec2c18ba4b76c66645b8e73.bindPopup(popup_10b427316b14c9b47957cb0026ea9c04)
+        ;
+
+        
+    
+    
+            var circle_marker_53cea8b1ddf75abf2182683df3ae08b2 = L.circleMarker(
+                [40.970555555555556, -90.37305555555555],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_c84ee4a8286fee18c701ba43b504ce2c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_12a4d5367ca08b2a71990d53c26b841f = $(`<div id="html_12a4d5367ca08b2a71990d53c26b841f" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7632 mg/L<br>Distance: 2889.0 m</div>`)[0];
+                popup_c84ee4a8286fee18c701ba43b504ce2c.setContent(html_12a4d5367ca08b2a71990d53c26b841f);
+            
+        
+
+        circle_marker_53cea8b1ddf75abf2182683df3ae08b2.bindPopup(popup_c84ee4a8286fee18c701ba43b504ce2c)
+        ;
+
+        
+    
+    
+            var circle_marker_8ca9d6bc6efc891bcb1f3fb43b076b36 = L.circleMarker(
+                [40.9575, -90.35666666666665],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#74c476", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_889adc32ea8cf945692b792b5fdcca94 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b8e08e9ae2da59a549a1ed2137127781 = $(`<div id="html_b8e08e9ae2da59a549a1ed2137127781" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7660 mg/L<br>Distance: 2675.0 m</div>`)[0];
+                popup_889adc32ea8cf945692b792b5fdcca94.setContent(html_b8e08e9ae2da59a549a1ed2137127781);
+            
+        
+
+        circle_marker_8ca9d6bc6efc891bcb1f3fb43b076b36.bindPopup(popup_889adc32ea8cf945692b792b5fdcca94)
+        ;
+
+        
+    
+    
+            var circle_marker_fdbc6e27aeabdad906cbac1af8ab1462 = L.circleMarker(
+                [40.95027777777778, -90.37277777777777],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a1d99b", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_d4c701d02fee374fa45109402c316fc0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_08b4bce6fa47b4ae3e710dfc83865cc4 = $(`<div id="html_08b4bce6fa47b4ae3e710dfc83865cc4" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.7567 mg/L<br>Distance: 1105.0 m</div>`)[0];
+                popup_d4c701d02fee374fa45109402c316fc0.setContent(html_08b4bce6fa47b4ae3e710dfc83865cc4);
+            
+        
+
+        circle_marker_fdbc6e27aeabdad906cbac1af8ab1462.bindPopup(popup_d4c701d02fee374fa45109402c316fc0)
+        ;
+
+        
+    
+    
+            var circle_marker_f2f1c3d6520aed891aca4d4f7d19ca25 = L.circleMarker(
+                [40.94611111111111, -90.38472222222222],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#238b45", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+        var popup_1e3a4b4d50c0173ee78dc92cba69b46d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dcb81a1a30dc09637bf940dba1e51c6e = $(`<div id="html_dcb81a1a30dc09637bf940dba1e51c6e" style="width: 100.0%; height: 100.0%;"><b>Sampling Location</b><br>Fluoride: 0.8270 mg/L<br>Distance: 0.0 m</div>`)[0];
+                popup_1e3a4b4d50c0173ee78dc92cba69b46d.setContent(html_dcb81a1a30dc09637bf940dba1e51c6e);
+            
+        
+
+        circle_marker_f2f1c3d6520aed891aca4d4f7d19ca25.bindPopup(popup_1e3a4b4d50c0173ee78dc92cba69b46d)
+        ;
+
+        
+    
+    
+            var marker_cfc71b08218eb4882882857bb50a5f08 = L.marker(
+                [40.946111, -90.384722],
+                {
+}
+            ).addTo(map_c2e8273e2090ebd903589895e5296f95);
+        
+    
+            var icon_0287b3b2531ca816ce8c21fa348df8ae = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "tint",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cf585c98327aebff985e8d16cf3f223a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_51f428650f7f4c2e5cc24a0ea17c0a26 = $(`<div id="html_51f428650f7f4c2e5cc24a0ea17c0a26" style="width: 100.0%; height: 100.0%;"><b>Water Plant</b><br>Fluoride: 0.827 mg/L</div>`)[0];
+                popup_cf585c98327aebff985e8d16cf3f223a.setContent(html_51f428650f7f4c2e5cc24a0ea17c0a26);
+            
+        
+
+        marker_cfc71b08218eb4882882857bb50a5f08.bindPopup(popup_cf585c98327aebff985e8d16cf3f223a)
+        ;
+
+        
+    
+    
+                marker_cfc71b08218eb4882882857bb50a5f08.setIcon(icon_0287b3b2531ca816ce8c21fa348df8ae);
+            
+</script>
+</html>
